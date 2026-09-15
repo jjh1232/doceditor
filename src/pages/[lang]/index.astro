@@ -1,0 +1,47 @@
+---
+/**
+ * /doceditor/ko · /doceditor/en · /doceditor/ja — 언어 첫 페이지.
+ * 언어마다 주력 형식이 다르다: ko·en → hwp, ja → 一太郎. 그 내용은 locales/*.json 이 갖는다.
+ *
+ * 설명 글은 **템플릿에 직접** 둔다. 자바스크립트로 나중에 넣으면 크롤러가 못 본다.
+ * <details> 로 접는 것은 괜찮다 — 글이 처음부터 HTML 안에 있다.
+ */
+import Tool from '../../layouts/Tool.astro';
+import Editor from '../../components/Editor.astro';
+import type { Locale } from '../../i18n/config';
+import { localeStaticPaths, useTranslations } from '../../i18n/utils';
+
+export const getStaticPaths = localeStaticPaths;
+const { lang } = Astro.props as { lang: Locale };
+const t = useTranslations(lang);
+---
+<Tool lang={lang} title={t('meta.title')} description={t('meta.description')}>
+  <ul class="badges">
+    <li>{t('badge.local')}</li>
+    <li>{t('badge.nosignup')}</li>
+    <li>{t('badge.free')}</li>
+  </ul>
+
+  <Editor lang={lang} />
+
+  <section class="about">
+    <details open>
+      <summary><h2>{t('about.what.h')}</h2></summary>
+      <p>{t('about.what.p')}</p>
+    </details>
+    <details>
+      <summary><h2>{t('about.how.h')}</h2></summary>
+      <p>{t('about.how.p')}</p>
+    </details>
+    <details>
+      <summary><h2>{t('about.limit.h')}</h2></summary>
+      <p>{t('about.limit.p')}</p>
+    </details>
+    <details>
+      <summary><h2>{t('faq.h')}</h2></summary>
+      <h3>{t('faq.q1')}</h3><p>{t('faq.a1')}</p>
+      <h3>{t('faq.q2')}</h3><p>{t('faq.a2')}</p>
+      <h3>{t('faq.q3')}</h3><p>{t('faq.a3')}</p>
+    </details>
+  </section>
+</Tool>

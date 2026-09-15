@@ -1,0 +1,96 @@
+---
+/**
+ * prelaps 도구 공통 뼈대. head · 헤더 · 언어 전환 · 푸터를 **한 벌**만 둔다.
+ *
+ * canonical 은 항상 자기 자신, hreflang 은 언어 목록에서 자동 계산한다 —
+ * 템플릿(순수 HTML)에서 페이지마다 손으로 복사하던 부분이다. (헌법 §4 · §5)
+ * 모든 URL 은 https://prelaps.com/doceditor/... 절대 주소, 끝 슬래시 없음.
+ */
+import '../styles/global.css';
+import LanguageSwitcher from '../components/LanguageSwitcher.astro';
+import { LOCALES, OG_LOCALE, type Locale } from '../i18n/config';
+import { absoluteUrl, hreflangLinks, localizePath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Locale;
+  /** 언어를 뺀 경로. '' = 언어 첫 페이지, '/jtd' = 형식별 페이지 */
+  path?: string;
+  title: string;
+  description: string;
+  /** 이 페이지가 존재하는 언어들 (hreflang · 언어 전환에 쓰인다) */
+  langs?: readonly Locale[];
+  /** 404 처럼 색인하면 안 되는 페이지 */
+  noindex?: boolean;
+}
+
+const { lang, path = '', title, description, langs = LOCALES, noindex = false } = Astro.props;
+const t = useTranslations(lang);
+const canonical = absoluteUrl(localizePath(lang, path));
+const alternates = noindex ? [] : hreflangLinks(path, langs);
+
+// 구조화 데이터. 화면에 있는 값과 같아야 한다 (다른 내용의 구조화 데이터는 없느니만 못하다).
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: title,
+  url: canonical,
+  applicationCategory: 'UtilityApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  inLanguage: lang,
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0' },
+  publisher: { '@type': 'Organization', name: 'prelaps', url: 'https://prelaps.com/' },
+  description,
+};
+---
+<!doctype html>
+<html lang={lang}>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{`${title} — ${t('meta.titleTail')} | prelaps`}</title>
+  <meta name="description" content={description}>
+  {noindex && <meta name="robots" content="noindex">}
+  {!noindex && <link rel="canonical" href={canonical}>}
+  {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href}>)}
+
+  {!noindex && <>
+    <meta property="og:type" content="website">
+    <meta property="og:url" content={canonical}>
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:image" content="https://prelaps.com/doceditor/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content={t('meta.ogAlt')}>
+    <meta property="og:locale" content={OG_LOCALE[lang]}>
+    <meta name="twitter:card" content="summary_large_image">
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </>}
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <!-- 허브로 나가는 링크. 허브는 /doceditor 밖이라 base 없이 쓴다. -->
+      <a class="home" href={`/${lang}`}>prelaps</a>
+      <h1>{title}</h1>
+      <p class="tagline">{t('head.tagline')}</p>
+    </div>
+    <LanguageSwitcher lang={lang} path={path} langs={langs} />
+  </header>
+
+  <slot />
+
+  <!-- 정책은 허브에 하나씩 (헌법 §8). #doceditor 은 허브 privacy 의 서비스별 블록 id 와 같아야 한다. -->
+  <footer>
+    <a href={`/${lang}`}>{t("footer.home")}</a>{" · "}
+    <a href={`/${lang}/privacy#doceditor`}>{t("footer.privacy")}</a>{" · "}
+    <a href={`/${lang}/terms`}>{t("footer.terms")}</a>{" · "}
+    <a href={`/${lang}/contact`}>{t("footer.contact")}</a>
+  </footer>
+</div>
+<noscript><p style="color:var(--err)">{t('noscript')}</p></noscript>
+</body>
+</html>

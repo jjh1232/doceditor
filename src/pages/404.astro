@@ -1,0 +1,19 @@
+---
+/**
+ * 없는 주소. noindex · canonical 없음 (헌법 §7). 어느 언어로 왔는지 모르므로 세 언어 안내를 둔다.
+ * wrangler 의 not_found_handling: "404-page" 가 이 파일을 status 404 로 돌려준다.
+ * 이게 없으면 없는 주소가 정상 페이지로 색인되는 soft 404 가 된다.
+ */
+import Tool from '../layouts/Tool.astro';
+import { LOCALES, LOCALE_LABELS } from '../i18n/config';
+import { localizePath, useTranslations } from '../i18n/utils';
+const t = useTranslations('en');
+---
+<Tool lang="en" title={t('notfound.title')} description={t('notfound.body')} noindex>
+  <section class="about">
+    {LOCALES.map((l) => {
+      const tl = useTranslations(l);
+      return <p lang={l}><a href={localizePath(l)}>{LOCALE_LABELS[l]}</a> — {tl('notfound.body')}</p>;
+    })}
+  </section>
+</Tool>

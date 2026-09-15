@@ -1,0 +1,225 @@
+/* 도구는 prelaps.com/imagesquish/<언어>/ 아래에 있다. 절대 경로를 쓰면 도메인 루트 기준으로
+   풀려서 전부 깨진다 — 이 파일 안의 모든 참조도 상대 경로여야 한다.
+
+   색 이름과 값은 허브(prelaps-home/src/styles/global.css)에서 그대로 가져왔다.
+   허브가 흰 배경 + prefers-color-scheme 대응이라 도구도 같이 간다.
+   race 가 다크 고정인 것은 그쪽이 3D 무대를 담느라 튄 경우다 — 기준은 허브다. */
+:root {
+  --bg: #ffffff;
+  --bg-soft: #f6f6f4;
+  --fg: #1b1b1a;
+  --fg-muted: #6b6b66;
+  --border: #e4e4df;
+  --accent: #2f6f4f;
+
+  /* 허브에 없는 것만 여기서 더한다. 허브에 같은 쓰임이 생기면 그쪽으로 옮긴다. */
+  --accent-fg: #ffffff;      /* 강조 버튼 위의 글자 */
+  --accent-soft: #edf4ef;    /* 결과 요약 바탕 */
+  --err: #b4433b;
+  --warn: #8a6a1f;
+  --warn-soft: #fbf4e4;      /* 결과가 늘었을 때의 요약 바탕 */
+  --field: #ffffff;          /* 입력칸 바탕. 패널 위에서도 한 단계 밝아야 눌리는 칸으로 읽힌다 */
+
+  --radius: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16171a;
+    --bg-soft: #1e2024;
+    --fg: #e9e9e6;
+    --fg-muted: #9a9a94;
+    --border: #2c2f34;
+    --accent: #7fc0a0;
+
+    /* 다크의 accent 는 밝은 초록이라 그 위 글자는 반대로 어두워야 한다. */
+    --accent-fg: #12211a;
+    --accent-soft: #1b2620;
+    --err: #e08b8b;
+    --warn: #d9b06a;
+    --warn-soft: #2a2318;
+    --field: #14161a;
+  }
+}
+
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+
+/* **이 줄이 없으면 hidden 속성이 조용히 안 먹는다.**
+   `.row { display: flex }` 같은 작성자 스타일이 브라우저 기본 `[hidden] { display: none }`
+   을 이겨서, 숨겼다고 생각한 칸이 그대로 보인다. 실제로 「원본 유지」인데 크기 입력칸이
+   떠 있어서, 값을 넣어도 아무 일이 없는(모드가 keep 이니 당연한) 화면이 나왔다.
+   race 의 styles.css 에도 같은 사고 기록이 있다 — 거기서는 결과창이 무대를 덮었다. */
+[hidden] { display: none !important; }
+
+/* 화면을 꽉 채우고 푸터를 바닥에 붙인다. 파일을 넣기 전에는 본문이 짧아서
+   그냥 두면 푸터가 화면 한가운데로 올라와 붙는다 — 페이지가 거기서 끝난 것처럼 보인다. */
+body {
+  margin: 0; padding: 20px 20px 40px;
+  min-height: 100vh;
+  min-height: 100dvh;   /* 모바일 주소창이 접힐 때 100vh 는 화면보다 커진다 */
+  display: flex; flex-direction: column;
+  background: var(--bg); color: var(--fg);
+  font: 15px/1.65 system-ui, -apple-system, "Segoe UI", "Apple SD Gothic Neo",
+        "Noto Sans KR", "Hiragino Sans", sans-serif;
+}
+/* 푸터의 margin-top:auto 가 먹으려면 그 부모도 세로 flex 여야 한다. */
+.wrap { max-width: 1060px; margin: 0 auto; width: 100%; flex: 1; display: flex; flex-direction: column; }
+
+/* 제목 위 구석의 허브 링크. 도구가 prelaps 안에 있다는 걸 알리는 유일한 표시이고,
+   검색엔진에게도 이 페이지가 어디 속하는지 알려주는 내부 링크다. */
+.home {
+  display: inline-block;
+  color: var(--fg-muted); text-decoration: none;
+  font-size: 12px; letter-spacing: .06em; text-transform: lowercase;
+  margin-bottom: 2px;
+}
+.home:hover { color: var(--fg); }
+
+header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 16px; margin-bottom: 14px;
+}
+h1 { font-size: 21px; margin: 0 0 4px; letter-spacing: -0.01em; }
+.tagline { color: var(--fg-muted); font-size: 14px; margin: 0; }
+.langs { display: flex; gap: 12px; font-size: 13px; flex: none; padding-top: 3px; }
+.langs a { color: var(--fg-muted); text-decoration: none; }
+.langs a[aria-current="true"] { color: var(--fg); font-weight: 600; }
+.langs a:hover { color: var(--fg); }
+
+/* ── 배지 ────────────────────────────────────────── */
+.badges {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  list-style: none; margin: 0 0 16px; padding: 0;
+}
+.badges li {
+  font-size: 12px; letter-spacing: .01em;
+  color: var(--accent); background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+  border-radius: 999px; padding: 3px 11px;
+}
+
+/* ── 공통 조각 ───────────────────────────────────── */
+button {
+  background: var(--bg); color: var(--fg); border: 1px solid var(--border);
+  border-radius: 6px; padding: 7px 14px; font: inherit; cursor: pointer;
+}
+button:hover:not(:disabled) { border-color: var(--fg-muted); }
+/* 고른 값. 테두리만 바꾸면 흰 배경에서 안 읽혀서 바탕까지 칠한다. */
+button.on {
+  background: var(--accent); border-color: var(--accent); color: var(--accent-fg);
+}
+button:disabled { opacity: .45; cursor: default; }
+button.sm { padding: 4px 10px; font-size: 13px; }
+button.primary {
+  background: var(--accent); border-color: var(--accent); color: var(--accent-fg);
+  font-weight: 600;
+}
+button.primary:hover:not(:disabled) { filter: brightness(1.1); }
+/* 드롭 영역 안의 "파일 선택". 버튼이지만 글자처럼 보여야 영역 전체가 클릭 대상인 인상을 안 깬다. */
+.linkish {
+  background: none; border: none; padding: 0;
+  color: var(--accent); text-decoration: underline; font: inherit;
+}
+.linkish:hover { background: none; filter: brightness(1.15); }
+.lb { color: var(--fg-muted); font-size: 12px; }
+.note { color: var(--fg-muted); font-size: 12px; margin: 8px 0 0; }
+.note.warn { color: var(--warn); }
+.bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+kbd {
+  font: inherit; font-size: 11px; background: var(--bg-soft); border: 1px solid var(--border);
+  border-bottom-width: 2px; border-radius: 4px; padding: 0 4px; color: var(--fg-muted);
+}
+
+/* ── 2단 레이아웃 ────────────────────────────────── */
+/* 왼쪽은 넣는 곳(드롭 + 파일 목록), 오른쪽은 바꾸는 값과 그 결과다.
+   목록이 100장까지 길어지므로 오른쪽 칸은 sticky 로 붙여 둔다 —
+   스크롤해 내려가도 「변환」과 「zip 받기」가 화면에 남아야 한다. */
+.layout { display: flex; gap: 16px; align-items: flex-start; }
+.main { flex: 1; min-width: 0; }
+.side { width: 300px; flex: none; position: sticky; top: 20px; }
+
+.panel {
+  background: var(--bg-soft); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px;
+}
+.panel h2 {
+  font-size: 12px; color: var(--fg-muted); margin: 0 0 9px;
+  font-weight: 600; letter-spacing: .04em;
+}
+
+/* ── 설정 ────────────────────────────────────────── */
+.set { margin-bottom: 16px; }
+.set:last-child { margin-bottom: 0; }
+.seg { display: flex; gap: 5px; flex-wrap: wrap; }
+.row { display: flex; gap: 6px; align-items: center; margin-top: 8px; }
+.num {
+  width: 84px; text-align: center; font-variant-numeric: tabular-nums;
+  background: var(--field); color: var(--fg); border: 1px solid var(--border);
+  border-radius: 5px; padding: 4px 7px; font: inherit; font-size: 13px;
+}
+.num:focus { outline: none; border-color: var(--accent); }
+.range { width: 100%; accent-color: var(--accent); }
+.range:disabled { opacity: .45; }
+
+/* ── 설명 ────────────────────────────────────────── */
+.about { margin-top: 34px; max-width: 720px; }
+.about h2 { font-size: 16px; margin: 22px 0 6px; }
+.about p { color: var(--fg); margin: 0 0 10px; }
+.about ul { color: var(--fg); margin: 0 0 10px; padding-left: 20px; }
+
+/* auto 라서 위쪽 남는 자리를 전부 밀어낸다 — 본문이 짧으면 바닥, 길면 내용 바로 뒤. */
+footer { margin-top: auto; padding-top: 32px; color: var(--fg-muted); font-size: 13px; }
+footer a { color: var(--fg-muted); }
+
+/* 좁아지면 2단이 풀린다. 오른쪽 칸이 위로 올라가면 파일을 넣기도 전에 설정부터
+   보이게 되므로, 순서를 뒤집어 드롭 영역이 먼저 오게 한다. */
+@media (max-width: 780px) {
+  .layout { flex-direction: column; }
+  .side { width: 100%; position: static; }
+  .file { flex-wrap: wrap; }
+  .fmeta { flex-basis: calc(100% - 56px); }
+  .fsize { margin-left: 56px; }
+  .dl { margin-left: auto; }
+}
+
+/* 가로×세로는 칸이 둘이라 좁혀야 300px 칸 안에서 "1200 × 900 px" 가 한 줄에 선다. */
+.num::placeholder { color: var(--fg-muted); opacity: .7; }
+
+/* 체크박스 한 줄. 글자를 눌러도 켜지도록 label 로 감싼다. */
+.check {
+  display: flex; align-items: center; gap: 6px;
+  margin-top: 10px; font-size: 12.5px; color: var(--fg-muted); cursor: pointer;
+}
+.check input { accent-color: var(--accent); margin: 0; }
+
+/* FAQ 질문. h2 보다 작고 본문보다 굵어야 목록처럼 훑을 수 있다. */
+.about h3 { font-size: 14px; margin: 16px 0 4px; }
+.about a { color: var(--accent); }
+
+/* 설명을 접어 둔다. 도구 아래에 글이 길게 깔리면 화면이 덕지덕지해진다.
+   **<details> 를 쓰는 것이 중요하다** — 글이 처음부터 HTML 안에 있어서 접혀 있어도
+   그대로 색인된다. 자바스크립트로 나중에 끼워 넣으면 크롤러가 못 보고, 그러면
+   도구 페이지가 「UI 라벨 서른 단어」짜리 얇은 페이지가 된다 (헌법 §5 · 애드센스).
+   덤으로 JS 가 한 줄도 필요 없고 키보드·스크린리더도 브라우저가 알아서 처리한다. */
+.about details { border-top: 1px solid var(--border); }
+.about details:last-of-type { border-bottom: 1px solid var(--border); }
+.about summary {
+  cursor: pointer; padding: 13px 0;
+  display: flex; align-items: center; gap: 10px;
+  list-style: none;                          /* 기본 삼각형을 지운다 */
+}
+.about summary::-webkit-details-marker { display: none; }   /* 사파리용 */
+.about summary:hover h2 { color: var(--accent); }
+/* h2 를 summary 안에 넣어 제목 구조를 지킨다 — 접혀 있어도 목차 신호는 남는다. */
+.about summary h2 { margin: 0; font-size: 15px; font-weight: 600; }
+/* 열림 표시는 글자로 그린다. 아이콘 파일을 하나 더 두지 않으려는 것이다. */
+.about summary::after {
+  content: '+'; margin-left: auto;
+  color: var(--fg-muted); font-size: 17px; line-height: 1;
+}
+.about details[open] summary::after { content: '−'; }
+/* 펼친 내용은 제목 줄과 붙지 않게 살짝 띄우고, 아래로도 숨 쉴 자리를 준다. */
+.about details > :not(summary) { margin-bottom: 10px; }
+.about details > :last-child { margin-bottom: 18px; }
+.about details h3:first-of-type { margin-top: 0; }

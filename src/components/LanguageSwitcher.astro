@@ -1,0 +1,25 @@
+---
+/**
+ * 언어 전환. 상태를 바꾸는 버튼이 아니라 **같은 경로의 다른 언어 주소로 가는 링크**다.
+ * 그래야 언어마다 주소가 따로 색인된다. (자바스크립트로 글자만 바꾸면 검색엔진은 한 언어만 본다)
+ */
+import { LOCALES, LOCALE_LABELS, type Locale } from '../i18n/config';
+import { localizePath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: Locale;
+  /** 언어를 뺀 경로. '' = 언어 첫 페이지 */
+  path?: string;
+  /** 이 페이지가 있는 언어만. 없는 언어로 링크하면 404 로 보낸다 */
+  langs?: readonly Locale[];
+}
+const { lang, path = '', langs = LOCALES } = Astro.props;
+const t = useTranslations(lang);
+---
+<nav class="langs" aria-label={t('ui.langLabel')}>
+  {langs.map((l) => (
+    <a href={localizePath(l, path)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>
+      {LOCALE_LABELS[l]}
+    </a>
+  ))}
+</nav>

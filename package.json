@@ -1,0 +1,21 @@
+{
+  "name": "doceditor",
+  "private": true,
+  "description": "양식 채우기(hwp · hwpx · 一太郎) — prelaps.com/doceditor. Astro 정적 빌드 → Workers Static Assets.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "wrangler dev",
+    "check": "astro check",
+    "test:engine": "node test/engine/run.mjs",
+    "deploy": "astro build && npx wrangler deploy",
+    "verify": "node test/verify.cjs",
+    "og": "\"${CHROME:-/c/Program Files/Google/Chrome/Application/chrome.exe}\" --headless --disable-gpu --screenshot=public/og.png --window-size=1200,630 --hide-scrollbars test/og.html",
+    "test:e2e": "node --no-warnings test/e2e.mjs"
+  },
+  "type": "module",
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^7.2.2"
+  }
+}

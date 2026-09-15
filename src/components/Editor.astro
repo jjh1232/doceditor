@@ -1,0 +1,101 @@
+---
+/**
+ * 파일 놓는 곳 + 편집 화면. **어느 언어 페이지에서든 모든 형식을 받는다** — 형식은 파일 내용으로 가른다.
+ *
+ * 화면 동작은 src/scripts/editor.js, 파일 처리는 src/scripts/engine.js.
+ * 버튼·안내 글자는 여기서 t() 로 박고, 스크립트가 나중에 만드는 문구는
+ * <script type="application/json" id="editor-strings"> 로 넘긴다.
+ *
+ * id 는 editor.js 가 찾는 이름과 같아야 한다 (drop · file · err · work · doc · side …).
+ */
+import '../styles/editor.css';
+import type { Locale } from '../i18n/config';
+import { editorStrings, useTranslations } from '../i18n/utils';
+
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const e = (k: string) => editorStrings(lang)[k];
+const strings = JSON.stringify(editorStrings(lang));
+const sizes = ['8', '9', '10', '10.5', '11', '12', '14', '16', '20'];
+const lines = ['100', '120', '130', '150', '160', '200'];
+---
+<div class="editor">
+  <div id="drop" tabindex="0" role="button" aria-label={t('drop.title')}>
+    <b>{t('drop.title')}</b>
+    <span>{t('drop.hint')}</span>
+  </div>
+  <p class="privacy">{t('drop.privacy')}</p>
+  <input type="file" id="file" accept=".hwp,.hwpx,.jtd,.jtt" hidden>
+  <input type="file" id="photofile" accept="image/*" hidden>
+
+  <div id="err" role="status" aria-live="polite"></div>
+
+  <div id="work">
+    <div class="bar">
+      <span class="name" id="fname"></span>
+      <span class="meta" id="fmeta"></span>
+      <span class="count" id="fcount"></span>
+      <button type="button" id="reset">{e('newFile')}</button>
+      <button type="button" class="primary" id="save" disabled>{e('saveHwp')}</button>
+    </div>
+    <div class="cols">
+      <div>
+        <div id="doc"></div>
+        <p class="note" id="note"></p>
+      </div>
+
+      <aside id="side">
+        <div class="tool">
+          <p class="toolhead">{e('panelPhoto')}</p>
+          <button type="button" id="addphoto">{e('choosePhoto')}</button>
+          <div class="chip" id="photochip" draggable="true">
+            <img alt={e('chosenPhotoAlt')}>
+            <b>{e('chipDrop')}<small>{e('chipOrClickPhoto')}</small></b>
+          </div>
+          <p class="hint">{e('photoHint')}</p>
+        </div>
+
+        <div class="tool">
+          <p class="toolhead">{e('panelSignature')}</p>
+          <canvas id="sigpad" width="500" height="220" aria-label={e('sigpadLabel')}></canvas>
+          <div class="row" style="margin-top:8px">
+            <button type="button" id="sigclear">{e('clear')}</button>
+          </div>
+          <div class="chip" id="sigchip" draggable="true">
+            <img alt={e('drawnSigAlt')}>
+            <b>{e('chipDrop')}<small>{e('chipOrClickSig')}</small></b>
+          </div>
+          <p class="hint">{e('sigHint')}</p>
+        </div>
+
+        <div class="tool">
+          <p class="toolhead">{e('panelText')}</p>
+          <p class="sel none" id="selinfo">{e('selNone')}</p>
+          <label>{e('size')}
+            <select id="fsize">
+              <option value="">{e('keep')}</option>
+              {sizes.map((s) => <option value={s}>{s}</option>)}
+            </select>
+          </label>
+          <label>{e('lineSpacing')}
+            <select id="fline">
+              <option value="">{e('keep')}</option>
+              {lines.map((p) => <option value={p}>{p}%</option>)}
+            </select>
+          </label>
+          <div class="row" style="margin-top:9px">
+            <button type="button" id="fapply" disabled>{e('applyLine')}</button>
+            <button type="button" id="fclear" disabled>{e('undo')}</button>
+          </div>
+          <p class="hint" id="fnote">{e('sizeNote')}</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<script type="application/json" id="editor-strings" set:html={strings} />
+<script>
+  import '../scripts/editor.js';
+</script>

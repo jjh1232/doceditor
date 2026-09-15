@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<!--
+  og.png 의 원본. 배포되는 파일이 아니라 그림을 만드는 틀이다 (public/ 밖이라 공개되지 않는다).
+  다시 만들기: npm run og  → public/og.png (1200×630, 트위터·카톡·슬랙 공통 크기)
+  한 장을 세 언어가 같이 쓰므로 hwp·一太郎 두 형식과 세 언어 문구를 함께 담는다.
+-->
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    width: 1200px; height: 630px; overflow: hidden;
+    background: #ffffff; color: #1b1b1a;
+    font: 15px/1.6 "Malgun Gothic", "Yu Gothic", "Segoe UI", system-ui, sans-serif;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0 84px; gap: 24px;
+  }
+  .brand { font-size: 22px; letter-spacing: .1em; color: #6b6b66; }
+  h1 { font-size: 64px; line-height: 1.15; letter-spacing: -.02em; }
+  .sub { font-size: 26px; color: #3d3d3a; }
+  .files { display: flex; gap: 12px; }
+  .files span {
+    font: 600 22px/1 Consolas, "Malgun Gothic", monospace; color: #1b1b1a;
+    border: 2px solid #1b1b1a; border-radius: 8px; padding: 10px 16px;
+  }
+  .badges { display: flex; gap: 10px; flex-wrap: wrap; }
+  .badges span {
+    font-size: 20px; color: #2f6f4f; background: #edf4ef;
+    border: 1px solid rgba(47,111,79,.3); border-radius: 999px; padding: 7px 20px;
+  }
+</style>
+</head>
+<body>
+  <div class="brand">prelaps · doceditor</div>
+  <h1>설치 없이 여는 문서 편집기</h1>
+  <p class="sub">Open &amp; fill documents without the app · ソフトなしで記入</p>
+  <div class="files"><span>.hwp</span><span>.hwpx</span><span>.jtd 一太郎</span></div>
+  <div class="badges">
+    <span>파일이 서버로 가지 않음</span>
+    <span>가입·설치 없음</span>
+    <span>무료</span>
+  </div>
+</body>
+</html>
