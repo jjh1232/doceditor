@@ -87,8 +87,19 @@ function withHeadScripts(response) {
 }
 
 /** Accept-Language 헤더에서 우리가 가진 언어를 고른다. q 값 순서대로 본다. */
-function pickLang(header) {
-  if (!header) return FALLBACK;
+function pickLang(header, country) {
+  // Accept-Language 가 **아예 없는** 요청은 사람이 아니라 대개 봇이다.
+  // 그때만 접속 국가를 본다.
+  //
+  // 네이버 Yeti 가 여기 걸렸다 — 등록된 주소가 prelaps.com 인데 헤더가 없어
+  // 영어판으로 302 되고 있었다(2026-09-21 실측). 한국어 검색엔진이 이 사이트의
+  // 대표 페이지를 영어로 보는 셈이다.
+  //
+  // 헤더가 있는 방문자의 동작은 하나도 안 바뀐다. 독일어 사용자처럼 헤더는
+  // 있는데 우리 언어에 안 맞는 경우도 그대로 영어다 — 그쪽은 x-default 가
+  // 답해야 하는 질문이고, 여기서 바뀌는 것은 「헤더가 없다」 하나뿐이다.
+  // 구글봇은 대개 미국에서 오므로 계속 영어를 받는다.
+  if (!header) return country === 'KR' ? 'ko' : FALLBACK;
   const wanted = header
     .split(',')
     .map((part) => {
@@ -134,7 +145,7 @@ export default {
     // /doceditor/ko 같은 언어판 주소 자체는 절대 건드리지 않는다.
     // 건드리면 언어 전환 UI 가 죽는다.
     if (path === '/' || path === '') {
-      const lang = pickLang(request.headers.get('accept-language'));
+      const lang = pickLang(request.headers.get('accept-language'), request.cf?.country);
       return new Response(null, {
         status: 302,
         headers: {
