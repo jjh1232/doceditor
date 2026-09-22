@@ -10,11 +10,11 @@
   --fg: #1b1b1a;
   --fg-muted: #6b6b66;
   --border: #e4e4df;
-  --accent: #2f6f4f;
+  --accent: #2a4a86;
 
   /* 허브에 없는 것만 여기서 더한다. 허브에 같은 쓰임이 생기면 그쪽으로 옮긴다. */
   --accent-fg: #ffffff;      /* 강조 버튼 위의 글자 */
-  --accent-soft: #edf4ef;    /* 결과 요약 바탕 */
+  --accent-soft: #eaf0f9;    /* 결과 요약 바탕 */
   --err: #b4433b;
   --warn: #8a6a1f;
   --warn-soft: #fbf4e4;      /* 결과가 늘었을 때의 요약 바탕 */
@@ -30,11 +30,11 @@
     --fg: #e9e9e6;
     --fg-muted: #9a9a94;
     --border: #2c2f34;
-    --accent: #7fc0a0;
+    --accent: #7ba7e8;
 
-    /* 다크의 accent 는 밝은 초록이라 그 위 글자는 반대로 어두워야 한다. */
-    --accent-fg: #12211a;
-    --accent-soft: #1b2620;
+    /* 다크의 accent 는 밝은 남색이라 그 위 글자는 반대로 어두워야 한다. */
+    --accent-fg: #0d1626;
+    --accent-soft: #1b2436;
     --err: #e08b8b;
     --warn: #d9b06a;
     --warn-soft: #2a2318;
