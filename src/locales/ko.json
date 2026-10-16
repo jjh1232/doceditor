@@ -127,5 +127,8 @@
   "editor.countEdited": "고친 줄 {n}",
   "editor.saveErr.JTD_TOO_LONG": "빈칸보다 긴 글자가 들어간 줄이 있습니다 (빨갛게 표시된 줄). 一太郎 문서는 공백 자리만큼만 채울 수 있습니다.",
   "editor.openErr.JTD_NO_TEXT.t": "一太郎 문서에서 글자를 찾지 못했습니다",
-  "editor.openErr.JTD_NO_TEXT.d": "본문이 그림이나 표로만 되어 있거나, 아직 읽지 못하는 구조입니다."
+  "editor.openErr.JTD_NO_TEXT.d": "본문이 그림이나 표로만 되어 있거나, 아직 읽지 못하는 구조입니다.",
+  "guides.h": "사용 안내",
+  "guides.more": "다른 안내 글",
+  "guides.cta": "hwp 열기·편집 도구로 가기 →"
 }

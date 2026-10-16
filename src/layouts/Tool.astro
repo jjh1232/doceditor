@@ -21,15 +21,26 @@ interface Props {
   langs?: readonly Locale[];
   /** 404 처럼 색인하면 안 되는 페이지 */
   noindex?: boolean;
+  /** 'article' = 도구 하위 글(/doceditor/ko/mac 등). 제목 꼬리·구조화 데이터·머리글이 달라진다 */
+  kind?: 'tool' | 'article';
 }
 
-const { lang, path = '', title, description, langs = LOCALES, noindex = false } = Astro.props;
+const { lang, path = '', title, description, langs = LOCALES, noindex = false, kind = 'tool' } = Astro.props;
 const t = useTranslations(lang);
 const canonical = absoluteUrl(localizePath(lang, path));
 const alternates = noindex ? [] : hreflangLinks(path, langs);
 
 // 구조화 데이터. 화면에 있는 값과 같아야 한다 (다른 내용의 구조화 데이터는 없느니만 못하다).
-const ld = {
+const ld = kind === 'article' ? {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  url: canonical,
+  mainEntityOfPage: canonical,
+  inLanguage: lang,
+  publisher: { '@type': 'Organization', name: 'prelaps', url: 'https://prelaps.com/' },
+  description,
+} : {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
   name: title,
@@ -49,14 +60,14 @@ const ld = {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{`${title} — ${t('meta.titleTail')} | prelaps`}</title>
+  <title>{kind === 'article' ? `${title} | prelaps` : `${title} — ${t('meta.titleTail')} | prelaps`}</title>
   <meta name="description" content={description}>
   {noindex && <meta name="robots" content="noindex">}
   {!noindex && <link rel="canonical" href={canonical}>}
   {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href}>)}
 
   {!noindex && <>
-    <meta property="og:type" content="website">
+    <meta property="og:type" content={kind === 'article' ? 'article' : 'website'}>
     <meta property="og:url" content={canonical}>
     <meta property="og:title" content={title}>
     <meta property="og:description" content={description}>
@@ -76,7 +87,7 @@ const ld = {
       <!-- 허브로 나가는 링크. 허브는 /doceditor 밖이라 base 없이 쓴다. -->
       <a class="home" href={`/${lang}`}>prelaps</a>
       <h1>{title}</h1>
-      <p class="tagline">{t('head.tagline')}</p>
+      <p class="tagline">{kind === 'article' ? description : t('head.tagline')}</p>
     </div>
     <LanguageSwitcher lang={lang} path={path} langs={langs} />
   </header>

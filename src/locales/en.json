@@ -127,5 +127,8 @@
   "editor.countEdited": "Edited lines {n}",
   "editor.saveErr.JTD_TOO_LONG": "A line has more text than its blank spaces (shown in red). Ichitaro documents can only be filled up to the available spaces.",
   "editor.openErr.JTD_NO_TEXT.t": "No text found in this Ichitaro document",
-  "editor.openErr.JTD_NO_TEXT.d": "The body may consist only of images or tables, or use a structure that can’t be read yet."
+  "editor.openErr.JTD_NO_TEXT.d": "The body may consist only of images or tables, or use a structure that can’t be read yet.",
+  "guides.h": "Guides",
+  "guides.more": "More guides",
+  "guides.cta": "Open the HWP viewer & editor →"
 }

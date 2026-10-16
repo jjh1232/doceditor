@@ -1,0 +1,38 @@
+---
+/**
+ * /doceditor/ko/mac · /doceditor/ja/jtd … — 도구 하위 글.
+ *
+ * 글은 src/guides/<언어>/<slug>.md 에 있다. 여기는 껍데기만 — 글 아래에 도구로 가는 버튼과
+ * 같은 언어의 다른 글 목록을 붙인다. 글이 도구로, 도구가 글로 서로 링크해야 둘 다 힘을 받는다.
+ */
+import Tool from '../../layouts/Tool.astro';
+import { GUIDES, guidesOf, langsOf } from '../../i18n/guides';
+import { localizePath, useTranslations } from '../../i18n/utils';
+
+export function getStaticPaths() {
+  return GUIDES.map((g) => ({ params: { lang: g.lang, slug: g.slug }, props: { guide: g } }));
+}
+
+const { guide } = Astro.props;
+const { lang, slug, title, description, Content } = guide;
+const t = useTranslations(lang);
+const others = guidesOf(lang).filter((g) => g.slug !== slug);
+---
+<Tool lang={lang} path={`/${slug}`} langs={langsOf(slug)} title={title} description={description} kind="article">
+  <article class="about guide">
+    <Content />
+  </article>
+
+  <p class="guide-cta">
+    <a class="btn" href={localizePath(lang)}>{t('guides.cta')}</a>
+  </p>
+
+  {others.length > 0 && (
+    <nav class="about guide-more" aria-label={t('guides.h')}>
+      <h2>{t('guides.more')}</h2>
+      <ul>
+        {others.map((g) => <li><a href={localizePath(lang, `/${g.slug}`)}>{g.title}</a></li>)}
+      </ul>
+    </nav>
+  )}
+</Tool>

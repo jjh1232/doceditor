@@ -127,5 +127,8 @@
   "editor.countEdited": "編集した行 {n}",
   "editor.saveErr.JTD_TOO_LONG": "スペースより長い文字が入った行があります（赤い行）。一太郎の文書はスペースの分だけ記入できます。",
   "editor.openErr.JTD_NO_TEXT.t": "一太郎の文書から文字が見つかりません",
-  "editor.openErr.JTD_NO_TEXT.d": "本文が画像や表だけでできているか、まだ読めない構造です。"
+  "editor.openErr.JTD_NO_TEXT.d": "本文が画像や表だけでできているか、まだ読めない構造です。",
+  "guides.h": "使い方ガイド",
+  "guides.more": "ほかのガイド",
+  "guides.cta": "一太郎・HWP を開くツールへ →"
 }

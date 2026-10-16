@@ -53,6 +53,9 @@ export default defineConfig({
   trailingSlash: 'never',
   build: { format: 'file' },
 
+  // 글(src/guides)의 코드 블록을 기본 하이라이터(shiki)가 어두운 띠로 칠한다 — 꺼 두고 global.css 가 꾸민다.
+  markdown: { syntaxHighlight: false },
+
   integrations: [
     sitemap({
       // 언어 없는 /doceditor 은 302 통로라 사이트맵에 넣지 않는다. 404 도 뺀다.
@@ -61,6 +64,13 @@ export default defineConfig({
       // 「언제 다시 볼지」를 스스로 정하고, 신규 도메인에서는 몇 주씩 걸린다.
       // 화면 글은 대부분 locales/*.json 에 있으므로 그쪽도 같이 본다.
       serialize(item) {
+        // 하위 글은 그 글의 .md 와 껍데기가 바뀐 날.
+        const g = new URL(item.url).pathname.match(/^\/doceditor\/(ko|en|ja)\/([a-z0-9-]+)$/);
+        if (g) {
+          const d = lastmodOf(`src/guides/${g[1]}/${g[2]}.md`, 'src/pages/[lang]/[slug].astro');
+          if (d) item.lastmod = d;
+          return item;
+        }
         const m = new URL(item.url).pathname.match(/^\/doceditor\/(ko|en|ja)$/);
         if (!m) return item;
         const d = lastmodOf('src/pages/[lang]/index.astro', `src/locales/${m[1]}.json`);

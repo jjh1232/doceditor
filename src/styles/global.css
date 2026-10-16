@@ -223,3 +223,35 @@ footer a { color: var(--fg-muted); }
 .about details > :not(summary) { margin-bottom: 10px; }
 .about details > :last-child { margin-bottom: 18px; }
 .about details h3:first-of-type { margin-top: 0; }
+
+/* ── 도구 하위 글 (/doceditor/<언어>/<slug>) ─────────────────────
+   글은 마크다운에서 오므로 클래스를 못 단다. 태그 이름으로만 꾸민다. */
+.guide { margin-top: 18px; }
+.guide h2 { font-size: 18px; margin: 28px 0 8px; }
+.guide li { margin-bottom: 4px; }
+.guide code { font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: .92em; background: var(--bg-soft); padding: 1px 4px; border-radius: 4px; }
+/* 규격표가 폰에서 화면 밖으로 밀려도 페이지 전체가 옆으로 흔들리지 않게, 표만 따로 민다. */
+.guide table { display: block; overflow-x: auto; border-collapse: collapse; margin: 0 0 14px; font-size: 14px; }
+.guide th, .guide td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; white-space: nowrap; }
+.guide th { background: var(--bg-soft); font-weight: 600; }
+.guide td:not(:first-child) { font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+.guide blockquote { margin: 0 0 12px; padding: 8px 14px; border-left: 3px solid var(--accent); background: var(--accent-soft); }
+.guide blockquote p { margin: 0; }
+
+.guide-cta { margin: 26px 0 0; }
+.guide-cta .btn {
+  display: inline-block; text-decoration: none;
+  background: var(--accent); color: var(--accent-fg); font-weight: 600;
+  padding: 10px 18px; border-radius: var(--radius);
+}
+.guide-cta .btn:hover { filter: brightness(1.1); }
+
+.guide-more { margin-top: 30px; }
+.guide-more h2 { font-size: 15px; }
+.guide-more ul { padding-left: 18px; }
+.guide-more li { margin-bottom: 6px; }
+/* 폰에서 표·계산식이 글 폭을 밀어내면 페이지 전체가 옆으로 넘친다. 넘치는 것은 그 칸 안에서만 민다. */
+.guide { min-width: 0; max-width: 100%; }
+.guide table { max-width: 100%; }
+.guide pre { overflow-x: auto; background: var(--bg-soft); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; margin: 0 0 12px; }
+.guide pre code { background: none; padding: 0; }
