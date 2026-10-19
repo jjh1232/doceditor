@@ -5,40 +5,42 @@
    허브가 흰 배경 + prefers-color-scheme 대응이라 도구도 같이 간다.
    race 가 다크 고정인 것은 그쪽이 3D 무대를 담느라 튄 경우다 — 기준은 허브다. */
 :root {
-  --bg: #ffffff;
-  --bg-soft: #f6f6f4;
-  --fg: #1b1b1a;
-  --fg-muted: #6b6b66;
-  --border: #e4e4df;
-  --accent: #2a4a86;
+  --bg: #f2f4f6;
+  --bg-soft: #ffffff;
+  --fg: #191f28;
+  --fg-muted: #5f6b7a;
+  --border: #e5e8eb;
+  --accent: #1b64da;
 
   /* 허브에 없는 것만 여기서 더한다. 허브에 같은 쓰임이 생기면 그쪽으로 옮긴다. */
   --accent-fg: #ffffff;      /* 강조 버튼 위의 글자 */
-  --accent-soft: #eaf0f9;    /* 결과 요약 바탕 */
+  --accent-soft: #e8f3ff;    /* 결과 요약 바탕 */
   --err: #b4433b;
   --warn: #8a6a1f;
   --warn-soft: #fbf4e4;      /* 결과가 늘었을 때의 요약 바탕 */
-  --field: #ffffff;          /* 입력칸 바탕. 패널 위에서도 한 단계 밝아야 눌리는 칸으로 읽힌다 */
+  --field: #f2f4f6;          /* 입력칸 바탕. 패널 위에서도 한 단계 밝아야 눌리는 칸으로 읽힌다 */
 
-  --radius: 10px;
+  --radius: 12px;            /* 버튼·칩 */
+  --radius-sm: 10px;         /* 입력칸 */
+  --radius-lg: 20px;         /* 카드 */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #16171a;
-    --bg-soft: #1e2024;
-    --fg: #e9e9e6;
-    --fg-muted: #9a9a94;
-    --border: #2c2f34;
-    --accent: #7ba7e8;
+    --bg: #17171c;
+    --bg-soft: #222229;
+    --fg: #ececf0;
+    --fg-muted: #9e9eab;
+    --border: #2f2f39;
+    --accent: #5b9cf8;
 
     /* 다크의 accent 는 밝은 남색이라 그 위 글자는 반대로 어두워야 한다. */
-    --accent-fg: #0d1626;
-    --accent-soft: #1b2436;
+    --accent-fg: #0b1a33;
+    --accent-soft: #1a2a44;
     --err: #e08b8b;
     --warn: #d9b06a;
     --warn-soft: #2a2318;
-    --field: #14161a;
+    --field: #2c2c35;
   }
 }
 
@@ -93,27 +95,28 @@ h1 { font-size: 21px; margin: 0 0 4px; letter-spacing: -0.01em; }
   list-style: none; margin: 0 0 16px; padding: 0;
 }
 .badges li {
-  font-size: 12px; letter-spacing: .01em;
+  font-size: 13px; font-weight: 600;
   color: var(--accent); background: var(--accent-soft);
-  border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
-  border-radius: 999px; padding: 3px 11px;
+  border-radius: 999px; padding: 4px 12px;
 }
 
 /* ── 공통 조각 ───────────────────────────────────── */
+/* 보조 버튼은 테두리 없는 회색 면. 테두리 자리(transparent)는 남겨 둬서 상태가 바뀌어도 크기가 안 흔들린다. */
 button {
-  background: var(--bg); color: var(--fg); border: 1px solid var(--border);
-  border-radius: 6px; padding: 7px 14px; font: inherit; cursor: pointer;
+  background: var(--bg); color: var(--fg); border: 1px solid transparent;
+  border-radius: var(--radius); padding: 9px 16px; font: inherit; font-weight: 600;
+  cursor: pointer;
 }
-button:hover:not(:disabled) { border-color: var(--fg-muted); }
+button:hover:not(:disabled) { filter: brightness(.96); }
 /* 고른 값. 테두리만 바꾸면 흰 배경에서 안 읽혀서 바탕까지 칠한다. */
 button.on {
-  background: var(--accent); border-color: var(--accent); color: var(--accent-fg);
+  background: var(--accent-soft); color: var(--accent);
 }
 button:disabled { opacity: .45; cursor: default; }
 button.sm { padding: 4px 10px; font-size: 13px; }
 button.primary {
-  background: var(--accent); border-color: var(--accent); color: var(--accent-fg);
-  font-weight: 600;
+  background: var(--accent); color: var(--accent-fg);
+  font-weight: 700; font-size: 16px; padding: 12px 22px; border-radius: 14px;
 }
 button.primary:hover:not(:disabled) { filter: brightness(1.1); }
 /* 드롭 영역 안의 "파일 선택". 버튼이지만 글자처럼 보여야 영역 전체가 클릭 대상인 인상을 안 깬다. */
@@ -140,12 +143,12 @@ kbd {
 .side { width: 300px; flex: none; position: sticky; top: 20px; }
 
 .panel {
-  background: var(--bg-soft); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px;
+  background: var(--bg-soft); border: 0;
+  border-radius: var(--radius-lg); padding: 20px 22px; margin-bottom: 12px;
 }
 .panel h2 {
-  font-size: 12px; color: var(--fg-muted); margin: 0 0 9px;
-  font-weight: 600; letter-spacing: .04em;
+  font-size: 16px; color: var(--fg); margin: 0 0 12px;
+  font-weight: 700; letter-spacing: -.01em;
 }
 
 /* ── 설정 ────────────────────────────────────────── */
@@ -155,8 +158,8 @@ kbd {
 .row { display: flex; gap: 6px; align-items: center; margin-top: 8px; }
 .num {
   width: 84px; text-align: center; font-variant-numeric: tabular-nums;
-  background: var(--field); color: var(--fg); border: 1px solid var(--border);
-  border-radius: 5px; padding: 4px 7px; font: inherit; font-size: 13px;
+  background: var(--field); color: var(--fg); border: 1px solid transparent;
+  border-radius: var(--radius-sm); padding: 7px 9px; font: inherit; font-size: 14px;
 }
 .num:focus { outline: none; border-color: var(--accent); }
 .range { width: 100%; accent-color: var(--accent); }
@@ -255,3 +258,12 @@ footer a { color: var(--fg-muted); }
 .guide table { max-width: 100%; }
 .guide pre { overflow-x: auto; background: var(--bg-soft); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; margin: 0 0 12px; }
 .guide pre code { background: none; padding: 0; }
+
+/* ── 토스풍 글자 (2026-10-19, 헌법 §12) ───────────────────────── */
+body { font-size: 16px; letter-spacing: -.01em; -webkit-font-smoothing: antialiased; }
+h1 { font-size: 30px; font-weight: 800; letter-spacing: -.03em; line-height: 1.3; }
+.tagline { font-size: 16px; }
+.home { font-size: 13px; font-weight: 700; letter-spacing: 0; }
+.guide blockquote { border-left: 0; border-radius: var(--radius); padding: 12px 16px; }
+.guide pre { border: 0; }
+.guide-cta .btn { border-radius: 14px; padding: 12px 22px; font-weight: 700; }
