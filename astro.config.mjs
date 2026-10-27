@@ -59,7 +59,8 @@ export default defineConfig({
   integrations: [
     sitemap({
       // 언어 없는 /doceditor 은 302 통로라 사이트맵에 넣지 않는다. 404 도 뺀다.
-      filter: (page) => /\/doceditor\/(ko|en|ja)(\/|$)/.test(page),
+      // 글은 한국어만 색인한다(src/i18n/guides.ts INDEXED_GUIDE_LANGS — 2026-10-27). en·ja 글은 noindex 라 뺀다.
+      filter: (page) => /\/doceditor\/(ko|en|ja)$/.test(page) || /\/doceditor\/ko\/[a-z0-9-]+$/.test(page),
       // 각 URL 에 그 페이지가 실제로 바뀐 날을 붙인다. 없으면 구글이
       // 「언제 다시 볼지」를 스스로 정하고, 신규 도메인에서는 몇 주씩 걸린다.
       // 화면 글은 대부분 locales/*.json 에 있으므로 그쪽도 같이 본다.

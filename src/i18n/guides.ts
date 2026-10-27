@@ -41,5 +41,14 @@ export const GUIDES: Guide[] = Object.entries(modules)
 
 export const guidesOf = (lang: Locale) => GUIDES.filter((g) => g.lang === lang);
 
+/**
+ * 색인하는 글의 언어. **2026-10-27 부터 한국어만.**
+ * en·ja 글은 유입이 없고(구글 서치콘솔 「발견됨 - 색인 안 됨」, 네이버는 한국어만), 도구 본 페이지보다
+ * 글이 훨씬 많은 사이트로 보이게 만들었다. 지우지 않고 noindex 로 둔다 — 링크·언어 전환은 산다.
+ * 다시 색인하려면 여기에 언어를 넣는다(사이트맵 filter 도 이 값을 본다).
+ */
+export const INDEXED_GUIDE_LANGS: readonly Locale[] = ['ko'];
+export const isIndexedGuide = (lang: Locale) => INDEXED_GUIDE_LANGS.includes(lang);
+
 /** 이 slug 가 있는 언어들 — hreflang · 언어 전환에 넘긴다. LOCALES 순서를 지킨다. */
 export const langsOf = (slug: string) => LOCALES.filter((l) => GUIDES.some((g) => g.slug === slug && g.lang === l));

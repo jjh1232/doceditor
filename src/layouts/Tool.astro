@@ -19,16 +19,18 @@ interface Props {
   description: string;
   /** 이 페이지가 존재하는 언어들 (hreflang · 언어 전환에 쓰인다) */
   langs?: readonly Locale[];
+  /** hreflang 에 넣을 언어. 기본은 langs. 언어 전환(langs)과 따로다 — 색인하지 않는 언어판은 전환 링크만 남긴다 */
+  hreflangLangs?: readonly Locale[];
   /** 404 처럼 색인하면 안 되는 페이지 */
   noindex?: boolean;
   /** 'article' = 도구 하위 글(/doceditor/ko/mac 등). 제목 꼬리·구조화 데이터·머리글이 달라진다 */
   kind?: 'tool' | 'article';
 }
 
-const { lang, path = '', title, description, langs = LOCALES, noindex = false, kind = 'tool' } = Astro.props;
+const { lang, path = '', title, description, langs = LOCALES, hreflangLangs = langs, noindex = false, kind = 'tool' } = Astro.props;
 const t = useTranslations(lang);
 const canonical = absoluteUrl(localizePath(lang, path));
-const alternates = noindex ? [] : hreflangLinks(path, langs);
+const alternates = noindex ? [] : hreflangLinks(path, hreflangLangs);
 
 // 구조화 데이터. 화면에 있는 값과 같아야 한다 (다른 내용의 구조화 데이터는 없느니만 못하다).
 const ld = kind === 'article' ? {

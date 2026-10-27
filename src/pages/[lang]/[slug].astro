@@ -6,7 +6,7 @@
  * 같은 언어의 다른 글 목록을 붙인다. 글이 도구로, 도구가 글로 서로 링크해야 둘 다 힘을 받는다.
  */
 import Tool from '../../layouts/Tool.astro';
-import { GUIDES, guidesOf, langsOf } from '../../i18n/guides';
+import { GUIDES, guidesOf, langsOf, isIndexedGuide, INDEXED_GUIDE_LANGS } from '../../i18n/guides';
 import { localizePath, useTranslations } from '../../i18n/utils';
 
 export function getStaticPaths() {
@@ -18,7 +18,8 @@ const { lang, slug, title, description, Content } = guide;
 const t = useTranslations(lang);
 const others = guidesOf(lang).filter((g) => g.slug !== slug);
 ---
-<Tool lang={lang} path={`/${slug}`} langs={langsOf(slug)} title={title} description={description} kind="article">
+<Tool lang={lang} path={`/${slug}`} langs={langsOf(slug)} hreflangLangs={langsOf(slug).filter(isIndexedGuide)}
+      noindex={!isIndexedGuide(lang)} title={title} description={description} kind="article">
   <article class="about guide">
     <Content />
   </article>
